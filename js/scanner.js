@@ -9,6 +9,7 @@ class QRScanner {
         
         this.initializeElements();
         this.bindEvents();
+        this.checkEnvironment();
     }
 
     initializeElements() {
@@ -19,6 +20,14 @@ class QRScanner {
         this.cameraPermissions = document.getElementById('cameraPermissions');
         this.successSound = document.getElementById('successSound');
         this.errorSound = document.getElementById('errorSound');
+        this.githubPagesBanner = document.getElementById('githubPagesBanner');
+    }
+
+    checkEnvironment() {
+        if (this.isGitHubPages()) {
+            this.githubPagesBanner.style.display = 'block';
+            document.title += ' - GitHub Pages';
+        }
     }
 
 
@@ -129,41 +138,72 @@ class QRScanner {
 
     async verifyCode(code) {
         try {
-            const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-                ? '' 
-                : window.location.origin + '/';
+            // Detectar si estamos en GitHub Pages
+            if (this.isGitHubPages()) {
+                // Usar validación local para GitHub Pages
+                const data = this.validateCodeLocally(code);
                 
-            const response = await fetch(baseUrl + 'api/verify_qr.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ code: code })
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                this.showMessage('✅ QR Válido', 'success');
-                this.playSound('success');
-                
-                // Registrar evento exitoso
-                this.logScanEvent(code, true, 'QR Válido', data);
-                
-                // Vibrar en dispositivos móviles
-                if ('vibrate' in navigator) {
-                    navigator.vibrate([200, 100, 200]);
+                if (data.success) {
+                    this.showMessage('✅ QR Válido', 'success');
+                    this.playSound('success');
+                    
+                    // Registrar evento exitoso localmente
+                    this.logScanEventLocal(code, true, 'QR Válido', data);
+                    
+                    // Vibrar en dispositivos móviles
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+                    
+                } else {
+                    this.showMessage('❌ No encontrado', 'error');
+                    this.playSound('error');
+                    
+                    // Registrar evento fallido localmente
+                    this.logScanEventLocal(code, false, 'No encontrado');
+                    
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate([500, 200, 500]);
+                    }
                 }
-                
             } else {
-                this.showMessage('❌ No encontrado', 'error');
-                this.playSound('error');
+                // Usar API PHP para localhost/servidor real
+                const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                    ? '' 
+                    : window.location.origin + '/';
+                    
+                const response = await fetch(baseUrl + 'api/verify_qr.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code: code })
+                });
+
+                const data = await response.json();
                 
-                // Registrar evento fallido
-                this.logScanEvent(code, false, data.message || 'No encontrado');
-                
-                if ('vibrate' in navigator) {
-                    navigator.vibrate([500, 200, 500]);
+                if (data.success) {
+                    this.showMessage('✅ QR Válido', 'success');
+                    this.playSound('success');
+                    
+                    // Registrar evento exitoso
+                    this.logScanEvent(code, true, 'QR Válido', data);
+                    
+                    // Vibrar en dispositivos móviles
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+                    
+                } else {
+                    this.showMessage('❌ No encontrado', 'error');
+                    this.playSound('error');
+                    
+                    // Registrar evento fallido
+                    this.logScanEvent(code, false, data.message || 'No encontrado');
+                    
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate([500, 200, 500]);
+                    }
                 }
             }
             
@@ -173,7 +213,11 @@ class QRScanner {
             this.playSound('error');
             
             // Registrar error de conexión
-            this.logScanEvent(code, false, 'Error de conexión');
+            if (this.isGitHubPages()) {
+                this.logScanEventLocal(code, false, 'Error de conexión');
+            } else {
+                this.logScanEvent(code, false, 'Error de conexión');
+            }
         }
         
         // Auto-reiniciar escaneo después de 3 segundos
@@ -234,6 +278,71 @@ class QRScanner {
             }
         } catch (error) {
             console.log('Could not play sound:', error);
+        }
+    }
+
+    isGitHubPages() {
+        return window.location.hostname.includes('github.io') || 
+               window.location.hostname.includes('githubusercontent.com');
+    }
+
+    validateCodeLocally(code) {
+        // Lista de códigos QR válidos para la demo
+        const validCodes = [
+            'QR20250917_DEMO123456',
+            'QR20250917_TEST789012', 
+            'QR20250917_GITHUB345678',
+            'DEMO_GITHUB_PAGES_001',
+            'TEST_VALIDATOR_002',
+            'VALID_QR_CODE_001',
+            'VALID_QR_CODE_002',
+            'VALID_QR_CODE_003'
+        ];
+
+        if (validCodes.includes(code)) {
+            return {
+                success: true,
+                user_name: 'Usuario Demo',
+                training_name: 'Capacitación Demo',
+                expiration: '31/12/2025 23:59',
+                access_time: new Date().toLocaleString('es-ES')
+            };
+        }
+
+        return {
+            success: false,
+            message: 'No encontrado'
+        };
+    }
+
+    logScanEventLocal(qrCode, success, message, userInfo = null) {
+        try {
+            const logEntry = {
+                timestamp: new Date().toISOString(),
+                qr_code: qrCode,
+                success: success,
+                message: message,
+                user_info: userInfo,
+                ip_address: 'local',
+                user_agent: navigator.userAgent
+            };
+
+            // Obtener logs existentes
+            let logs = JSON.parse(localStorage.getItem('qr_scan_logs') || '[]');
+            
+            // Agregar nuevo log
+            logs.unshift(logEntry); // Agregar al inicio
+            
+            // Mantener solo los últimos 1000 logs
+            if (logs.length > 1000) {
+                logs = logs.slice(0, 1000);
+            }
+            
+            // Guardar en localStorage
+            localStorage.setItem('qr_scan_logs', JSON.stringify(logs));
+            
+        } catch (error) {
+            console.log('Could not log scan event locally:', error);
         }
     }
 

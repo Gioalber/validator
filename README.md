@@ -24,7 +24,15 @@ Un sistema web completo para verificar códigos QR y controlar el acceso a estac
 🌐 **[Ver Demo](https://gioalber.github.io/validator/)** - Prueba el sistema en funcionamiento
 
 📱 **Escanear QR**: [https://gioalber.github.io/validator/](https://gioalber.github.io/validator/)
-👨‍💼 **Panel Admin**: [https://gioalber.github.io/validator/admin/](https://gioalber.github.io/validator/admin/)
+� **Ver Registros**: [https://gioalber.github.io/validator/logs-local.html](https://gioalber.github.io/validator/logs-local.html)
+
+### 🔍 Códigos QR de Prueba para GitHub Pages:
+- `QR20250917_DEMO123456`
+- `DEMO_GITHUB_PAGES_001` 
+- `TEST_VALIDATOR_002`
+- `VALID_QR_CODE_001`
+
+**Nota:** En GitHub Pages, la validación es local y los registros se guardan en localStorage del navegador.
 
 ## 📦 Instalación
 
