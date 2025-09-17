@@ -9,42 +9,23 @@ class QRScanner {
         
         this.initializeElements();
         this.bindEvents();
-        this.checkDemoMode();
     }
 
     initializeElements() {
         this.startBtn = document.getElementById('startScan');
         this.stopBtn = document.getElementById('stopScan');
-        this.toggleManualBtn = document.getElementById('toggleManual');
-        this.verifyManualBtn = document.getElementById('verifyManual');
-        this.manualInput = document.querySelector('.manual-input');
-        this.manualCode = document.getElementById('manualCode');
         this.statusMessage = document.getElementById('statusMessage');
         this.loadingSpinner = document.querySelector('.loading-spinner');
         this.cameraPermissions = document.getElementById('cameraPermissions');
         this.successSound = document.getElementById('successSound');
         this.errorSound = document.getElementById('errorSound');
-        this.demoBanner = document.getElementById('demoBanner');
     }
 
-    checkDemoMode() {
-        if (DemoData.isDemoMode()) {
-            this.demoBanner.style.display = 'block';
-            document.title += ' - Demo Mode';
-        }
-    }
+
 
     bindEvents() {
         this.startBtn.addEventListener('click', () => this.startScanning());
         this.stopBtn.addEventListener('click', () => this.stopScanning());
-        this.toggleManualBtn.addEventListener('click', () => this.toggleManualInput());
-        this.verifyManualBtn.addEventListener('click', () => this.verifyManualCode());
-        
-        this.manualCode.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                this.verifyManualCode();
-            }
-        });
 
         // Auto-iniciar la cámara en dispositivos móviles
         if (this.isMobileDevice()) {
@@ -148,39 +129,22 @@ class QRScanner {
 
     async verifyCode(code) {
         try {
-            let data;
-            
-            // Verificar si estamos en modo demo (GitHub Pages)
-            if (window.location.hostname.includes('github.io') || window.location.search.includes('demo=true')) {
-                // Modo demo - usar datos simulados
-                data = DemoData.verifyCode(code);
-                // Simular delay de red
-                await new Promise(resolve => setTimeout(resolve, 500));
-            } else {
-                // Modo normal - usar API real
-                const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-                    ? '' 
-                    : window.location.origin + '/';
-                    
-                const response = await fetch(baseUrl + 'api/verify_qr.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ code: code })
-                });
+            const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? '' 
+                : window.location.origin + '/';
+                
+            const response = await fetch(baseUrl + 'api/verify_qr.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: code })
+            });
 
-                data = await response.json();
-            }
+            const data = await response.json();
             
             if (data.success) {
-                this.showMessage(
-                    `✅ ACCESO CONCEDIDO<br>
-                    <strong>Bienvenido: ${data.user_name}</strong><br>
-                    Capacitación: ${data.training_name}<br>
-                    Válido hasta: ${data.expiration}`, 
-                    'success'
-                );
+                this.showMessage('✅ QR Válido', 'success');
                 this.playSound('success');
                 
                 // Vibrar en dispositivos móviles
@@ -189,11 +153,7 @@ class QRScanner {
                 }
                 
             } else {
-                this.showMessage(
-                    `❌ ACCESO DENEGADO<br>
-                    <strong>Motivo:</strong> ${data.message}`, 
-                    'error'
-                );
+                this.showMessage('❌ QR Inválido', 'error');
                 this.playSound('error');
                 
                 if ('vibrate' in navigator) {
@@ -215,30 +175,7 @@ class QRScanner {
         }, 3000);
     }
 
-    toggleManualInput() {
-        const isVisible = this.manualInput.style.display !== 'none';
-        this.manualInput.style.display = isVisible ? 'none' : 'block';
-        
-        if (!isVisible) {
-            this.manualCode.focus();
-        } else {
-            this.manualCode.value = '';
-        }
-    }
 
-    async verifyManualCode() {
-        const code = this.manualCode.value.trim();
-        
-        if (!code) {
-            this.showMessage('Por favor ingresa un código válido', 'warning');
-            return;
-        }
-        
-        this.showLoading(true);
-        await this.verifyCode(code);
-        this.showLoading(false);
-        this.manualCode.value = '';
-    }
 
     handleCameraError(error) {
         console.error('Camera error:', error);
