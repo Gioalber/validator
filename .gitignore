@@ -1,0 +1,41 @@
+# Archivos de desarrollo local
+.DS_Store
+.env
+*.log
+
+# Directorios de deployment local
+qr_verification_deploy/
+qr_verification_css.zip
+
+# Archivos de XAMPP/desarrollo local
+install.sh
+prepare_deploy.sh
+
+# Logs y temporales
+logs/*.log
+temp/
+cache/
+
+# Archivos de editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de sistema
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Node modules (si se usan en futuro)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de backup
+*.bak
+*.backup
+*.old
+*.orig
