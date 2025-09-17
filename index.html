@@ -109,21 +109,7 @@
             border-bottom: none;
         }
 
-        .scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #28a745, transparent);
-            animation: scan-animation 2s linear infinite;
-        }
 
-        @keyframes scan-animation {
-            0% { top: 0; }
-            50% { top: calc(100% - 2px); }
-            100% { top: 0; }
-        }
 
         .btn-scan {
             background: linear-gradient(135deg, #28a745, #20c997);
@@ -242,7 +228,6 @@
             <div class="scan-overlay">
                 <video id="video" autoplay playsinline></video>
                 <div class="scan-frame">
-                    <div class="scan-line"></div>
                 </div>
             </div>
 

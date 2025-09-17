@@ -147,14 +147,20 @@ class QRScanner {
                 this.showMessage('✅ QR Válido', 'success');
                 this.playSound('success');
                 
+                // Registrar evento exitoso
+                this.logScanEvent(code, true, 'QR Válido', data);
+                
                 // Vibrar en dispositivos móviles
                 if ('vibrate' in navigator) {
                     navigator.vibrate([200, 100, 200]);
                 }
                 
             } else {
-                this.showMessage('❌ QR Inválido', 'error');
+                this.showMessage('❌ No encontrado', 'error');
                 this.playSound('error');
+                
+                // Registrar evento fallido
+                this.logScanEvent(code, false, data.message || 'No encontrado');
                 
                 if ('vibrate' in navigator) {
                     navigator.vibrate([500, 200, 500]);
@@ -165,6 +171,9 @@ class QRScanner {
             console.error('Verification error:', error);
             this.showMessage('Error de conexión. Intenta nuevamente.', 'error');
             this.playSound('error');
+            
+            // Registrar error de conexión
+            this.logScanEvent(code, false, 'Error de conexión');
         }
         
         // Auto-reiniciar escaneo después de 3 segundos
@@ -225,6 +234,30 @@ class QRScanner {
             }
         } catch (error) {
             console.log('Could not play sound:', error);
+        }
+    }
+
+    async logScanEvent(qrCode, success, message, userInfo = null) {
+        try {
+            const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? '' 
+                : window.location.origin + '/';
+
+            await fetch(baseUrl + 'api/logger.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'log_scan',
+                    qr_code: qrCode,
+                    success: success,
+                    message: message,
+                    user_info: userInfo
+                })
+            });
+        } catch (error) {
+            console.log('Could not log scan event:', error);
         }
     }
 }
