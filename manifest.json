@@ -1,22 +1,15 @@
 {
-  "name": "Sistema QR CSS - Control de Acceso",
-  "short_name": "QR CSS",
-  "description": "Sistema de verificación de códigos QR para control de acceso - Caja de Seguro Social",
-  "start_url": "/qr_verification/",
-  "scope": "/qr_verification/",
+  "name": "Validador QR",
+  "short_name": "QR Validator",
+  "description": "Sistema de validación de códigos QR",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#0A4982",
   "theme_color": "#0A4982",
-  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgeD0iMzIiIHk9IjMyIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IndoaXRlIj4KICA8cGF0aCBkPSJNMyAzaDZWOUgzVjN6bTAtMmgtMnYxMWg4VjF6TTUgNWg2djZINVY1em0wLTJIM3YxMGg4VjN6TTE3IDNIMjF2NmgtNFYzem0wLTJoLTJ2MTBoOFYxek0xOSA1aDZ2NmgtNlY1em0wLTJoLTJ2MTBoOFYzek0zIDE3aDZWMjFIM1YxN3ptMC0yaC0ydjhoOFYxNXpNNSAxOWg2djZINVYxOXptMC0yaC0ydjEwaDhWMTd6TTE1IDEzaDJ2MmgtMnYtMnptMCAwaDJ2MmgtMnYtMnptMiAwaDJ2MmgtMlYxNXptMiAwaDJ2MmgtMlYxN3ptLTYgMGgydjJoLTJWMTd6bTIgMmgydjJoLTJWMTl6bTIgMGgydjJoLTJWMTl6bTIgMGgydjJoLTJWMTl6Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMwQTQ5ODIiLz4KPHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgeD0iMzIiIHk9IjMyIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IndoaXRlIj4KICA8cGF0aCBkPSJNMyAzaDZWOUgzVjN6bTAtMmgtMnYxMWg4VjF6TTUgNWg2djZINVY1em0wLTJIM3YxMGg4VjN6TTE3IDNIMjF2NmgtNFYzem0wLTJoLTJ2MTBoOFYxek0xOSA1aDZ2NmgtNlY1em0wLTJoLTJ2MTBoOFYzek0zIDE3aDZWMjFIM1YxN3ptMC0yaC0ydjhoOFYxNXpNNSAxOWg2djZINVYxOXptMC0yaC0ydjEwaDhWMTd6TTE1IDEzaDJ2MmgtMnYtMnptMCAwaDJ2MmgtMnYtMnptMiAwaDJ2MmgtMlYxNXptMiAwaDJ2MmgtMlYxN3ptLTYgMGgydjJoLTJWMTd6bTIgMmgydjJoLTJWMTl6bTIgMGgydjJoLTJWMTl6bTIgMGgydjJoLTJWMTl6Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
       "sizes": "192x192",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB3aWR0aD0iMzQwIiBoZWlnaHQ9IjM0MCIgeD0iODYiIHk9Ijg2IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IndoaXRlIj4KICA8cGF0aCBkPSJNMyAzaDZWOUgzVjN6bTAtMmgtMnYxMWg4VjF6TTUgNWg2djZINVY1em0wLTJIM3YxMGg4VjN6TTE3IDNIMjF2NmgtNFYzem0wLTJoLTJ2MTBoOFYxek0xOSA1aDZ2NmgtNlY1em0wLTJoLTJ2MTBoOFYzek0zIDE3aDZWMjFIM1YxN3ptMC0yaC0ydjhoOFYxNXpNNSAxOWg2djZINVYxOXptMC0yaC0ydjEwaDhWMTd6TTE1IDEzaDJ2MmgtMnYtMnptMCAwaDJ2MmgtMnYtMnptMiAwaDJ2MmgtMlYxNXptMiAwaDJ2MmgtMlYxN3ptLTYgMGgydjJoLTJWMTd6bTIgMmgydjJoLTJWMTl6bTIgMGgydjJoLTJWMTl6bTIgMGgydjJoLTJWMTl6Ii8+Cjwvc3ZnPgo8L3N2Zz4K",
-      "sizes": "512x512",
       "type": "image/svg+xml"
     }
   ]
