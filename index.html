@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A4982">
     <title>Validador QR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; }
         body { margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
@@ -36,7 +37,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔍 Verificación de Acceso</h1>
+            <h1><i class="fas fa-qrcode"></i> Verificación de Acceso</h1>
             <p>Valida código QR</p>
         </div>
 
@@ -47,15 +48,15 @@
             </div>
 
             <div class="controls">
-                <button id="startScan" class="btn">📷 Iniciar Escaneo</button>
-                <button id="stopScan" class="btn btn-secondary" style="display: none;">⏹ Detener</button>
+                <button id="startScan" class="btn"><i class="fas fa-camera"></i> Iniciar Escaneo</button>
+                <button id="stopScan" class="btn btn-secondary" style="display: none;"><i class="fas fa-stop"></i> Detener</button>
             </div>
 
-            <div class="spinner">🔄 Verificando...</div>
+            <div class="spinner"><i class="fas fa-spinner fa-spin"></i> Verificando...</div>
             <div id="statusMessage" class="status"></div>
             
             <div id="githubPagesBanner" style="display: none;" class="logs-btn">
-                <a href="logs-local.html">📋 Ver Registros</a>
+                <a href="logs-local.html"><i class="fas fa-clipboard-list"></i> Ver Registros</a>
             </div>
         </div>
     </div>
